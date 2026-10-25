@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f7f5ff" />
+    <meta name="description" content="AdmitBot — trợ lý tuyển sinh AI cho Học viện Phụ nữ Việt Nam." />
+    <title>AdmitBot — Trợ lý tuyển sinh AI</title>
+    <link rel="icon" href="https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f393.svg" />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar" id="sidebar">
+        <div class="brand-lockup">
+          <div class="brand-mark" aria-hidden="true">
+            <span class="brand-mark-ring"></span>
+            <span class="brand-mark-star">✦</span>
+          </div>
+          <div>
+            <div class="brand-name">admit<span>bot</span></div>
+            <div class="brand-caption">TƯ VẤN TUYỂN SINH AI</div>
+          </div>
+        </div>
+
+        <button class="new-chat-button" id="newChatButton" type="button">
+          <span class="plus-icon">＋</span>
+          <span>Đoạn chat mới</span>
+          <span class="shortcut">⌘ K</span>
+        </button>
+
+        <nav class="main-nav" aria-label="Điều hướng chính">
+          <div class="nav-label">KHÁM PHÁ</div>
+          <button class="nav-item active" data-view="chat" type="button">
+            <span class="nav-icon">◌</span><span>Trợ lý AI</span><span class="nav-live-dot"></span>
+          </button>
+          <button class="nav-item" data-view="majors" type="button">
+            <span class="nav-icon">▦</span><span>Tra cứu ngành</span>
+          </button>
+          <button class="nav-item" data-view="saved" type="button">
+            <span class="nav-icon">♡</span><span>Ngành đã quan tâm</span><span class="count-pill" id="savedCount">0</span>
+          </button>
+          <button class="nav-item" data-view="stats" type="button">
+            <span class="nav-icon">↗</span><span>Thống kê của bạn</span>
+          </button>
+        </nav>
+
+        <div class="history-section">
+          <div class="section-row">
+            <div class="nav-label">GẦN ĐÂY</div>
+            <button class="icon-button subtle" id="clearHistoryButton" title="Xóa lịch sử" type="button">•••</button>
+          </div>
+          <div class="history-list" id="historyList"></div>
+        </div>
+
+        <div class="sidebar-bottom">
+          <div class="privacy-note">
+            <span class="privacy-icon">✦</span>
+            <p>Thông tin được tư vấn theo nội dung báo cáo và có thể thay đổi theo từng năm.</p>
+          </div>
+          <button class="profile-card" type="button">
+            <div class="avatar">MA</div>
+            <div class="profile-copy"><strong>Khách tham quan</strong><span>Đang tìm hiểu tuyển sinh</span></div>
+            <span class="chevron">›</span>
+          </button>
+        </div>
+      </aside>
+
+      <main class="main-panel">
+        <header class="topbar">
+          <button class="mobile-menu icon-button" id="mobileMenuButton" type="button" aria-label="Mở menu">☰</button>
+          <div class="breadcrumb"><span>AdmitBot</span><span class="breadcrumb-slash">/</span><strong id="pageTitle">Trợ lý AI</strong></div>
+          <div class="topbar-actions">
+            <div class="status-chip"><span class="status-dot"></span> AI trực tuyến</div>
+            <button class="icon-button" id="helpButton" type="button" title="Hướng dẫn">?</button>
+            <button class="icon-button" id="themeButton" type="button" title="Đổi giao diện">◐</button>
+          </div>
+        </header>
+
+        <section class="content-area">
+          <div class="view" id="chatView">
+            <div class="chat-layout">
+              <div class="chat-column">
+                <div class="eyebrow">TRỢ LÝ TUYỂN SINH AI <span class="eyebrow-line"></span></div>
+                <h1>Tìm đúng ngành,<br /><em>chọn đúng hướng.</em></h1>
+                <p class="intro-copy">Mình có thể giúp bạn khám phá ngành học, phương thức xét tuyển và những điều cần chuẩn bị — nhẹ nhàng, rõ ràng, theo cách của bạn.</p>
+
+                <div class="conversation" id="conversation" aria-live="polite">
+                  <div class="message-row bot-message">
+                    <div class="bot-avatar">✦</div>
+                    <div class="message-stack">
+                      <div class="message-meta"><strong>AdmitBot</strong><span>vừa xong</span></div>
+                      <div class="message-bubble bot-bubble">
+                        <p>Chào bạn! Mình là trợ lý tuyển sinh AI. Hãy cho mình biết bạn muốn tìm hiểu ngành học nào!</p>
+                        <div class="welcome-tags"><span>24/7 hỗ trợ</span><span>Hiểu ngôn ngữ tự nhiên</span></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="typing-indicator" id="typingIndicator" hidden>
+                  <div class="bot-avatar small">✦</div><div class="typing-bubble"><i></i><i></i><i></i></div><span>AdmitBot đang suy nghĩ…</span>
+                </div>
+
+                <div class="composer-wrap">
+                  <div class="quick-prompts" id="quickPrompts">
+                    <button type="button" data-prompt="Mình muốn xem các ngành đào tạo">Các ngành đào tạo <span>↗</span></button>
+                    <button type="button" data-prompt="Các phương thức xét tuyển là gì?">Phương thức xét tuyển <span>↗</span></button>
+                    <button type="button" data-prompt="Học phí dự kiến khoảng bao nhiêu?">Học phí dự kiến <span>↗</span></button>
+                  </div>
+                  <form class="composer" id="chatForm">
+                    <textarea id="chatInput" rows="1" placeholder="Hỏi mình bất cứ điều gì về tuyển sinh…" aria-label="Nhập câu hỏi"></textarea>
+                    <div class="composer-footer">
+                      <span class="composer-hint"><kbd>Enter</kbd> để gửi · <kbd>Shift + Enter</kbd> để xuống dòng</span>
+                      <button class="send-button" type="submit" aria-label="Gửi tin nhắn"><span>Gửi</span><span class="send-arrow">↗</span></button>
+                    </div>
+                  </form>
+                </div>
+                <div class="disclaimer"><span>✦</span> Demo dựa trên nội dung báo cáo nhóm 5 · Hãy xác minh thông tin chính thức với nhà trường trước khi đăng ký.</div>
+              </div>
+
+              <aside class="insight-column">
+                <div class="insight-card highlight-card">
+                  <div class="card-kicker"><span class="sparkle">✦</span> GỢI Ý CHO BẠN</div>
+                  <h3>Bắt đầu từ điều<br />bạn tò mò nhất.</h3>
+                  <p>Chọn một chủ đề hoặc kể cho mình nghe về sở thích của bạn.</p>
+                  <button class="text-link" data-prompt="Mình chưa biết chọn ngành nào, hãy giúp mình định hướng">Bắt đầu định hướng <span>↗</span></button>
+                  <div class="card-orbit orbit-one"></div><div class="card-orbit orbit-two"></div>
+                </div>
+                <div class="insight-card facts-card">
+                  <div class="card-kicker muted">ADMITBOT CÓ THỂ GIÚP BẠN</div>
+                  <div class="fact-row"><span class="fact-icon violet">⌁</span><div><strong>Khám phá ngành</strong><span>Nhìn thấy bức tranh toàn cảnh</span></div></div>
+                  <div class="fact-row"><span class="fact-icon peach">◎</span><div><strong>So sánh lựa chọn</strong><span>Cân nhắc theo sở thích & năng lực</span></div></div>
+                  <div class="fact-row"><span class="fact-icon mint">↗</span><div><strong>Chuẩn bị hồ sơ</strong><span>Biết mình cần gì tiếp theo</span></div></div>
+                </div>
+              </aside>
+            </div>
+          </div>
+
+          <div class="view hidden" id="majorsView">
+            <div class="subpage-header"><div><div class="eyebrow">KHÁM PHÁ CHƯƠNG TRÌNH</div><h2>Ngành học phù hợp<br /><em>đang chờ bạn.</em></h2></div><div class="search-field"><span>⌕</span><input id="majorSearch" placeholder="Tìm theo tên ngành…" /></div></div>
+            <div class="filter-row"><button class="filter-chip active" data-filter="all">Tất cả</button><button class="filter-chip" data-filter="kinh-te">Kinh tế & kinh doanh</button><button class="filter-chip" data-filter="xa-hoi">Xã hội & truyền thông</button><button class="filter-chip" data-filter="cong-nghe">Công nghệ</button></div>
+            <div class="major-grid" id="majorGrid"></div>
+            <div class="year-note"><span>✦</span><div><strong>Lưu ý về dữ liệu tuyển sinh</strong><p>Danh sách và thông tin trong bản demo được tổng hợp từ phạm vi báo cáo. Chỉ tiêu, học phí, phương thức xét tuyển của từng năm cần được xác minh tại kênh chính thức của Học viện.</p></div></div>
+          </div>
+
+          <div class="view hidden" id="savedView">
+            <div class="subpage-header simple"><div><div class="eyebrow">GÓC LƯU CỦA BẠN</div><h2>Những ngành bạn<br /><em>đang để tâm.</em></h2><p class="page-lede">Lưu lại một ngành để quay lại trò chuyện bất cứ lúc nào.</p></div><div class="saved-summary"><strong id="savedSummaryCount">0</strong><span>ngành đã lưu</span></div></div>
+            <div class="saved-grid" id="savedGrid"></div>
+          </div>
+
+          <div class="view hidden" id="statsView">
+            <div class="subpage-header simple"><div><div class="eyebrow">BẢN ĐỒ QUAN TÂM</div><h2>Hành trình tìm hiểu<br /><em>của bạn.</em></h2><p class="page-lede">Một góc nhìn nhỏ về những điều bạn đã khám phá cùng AdmitBot.</p></div></div>
+            <div class="stats-grid"><div class="stat-card lavender"><span class="stat-label">CÂU HỎI ĐÃ GỬI</span><strong id="questionStat">0</strong><span class="stat-trend">trong phiên này</span></div><div class="stat-card peach-bg"><span class="stat-label">NGÀNH ĐÃ LƯU</span><strong id="savedStat">0</strong><span class="stat-trend">để xem lại sau</span></div><div class="stat-card mint-bg"><span class="stat-label">CHỦ ĐỀ ƯA THÍCH</span><strong id="topicStat">—</strong><span class="stat-trend">từ các cuộc trò chuyện</span></div></div>
+            <div class="activity-card"><div class="activity-heading"><div><span class="card-kicker muted">NHỊP ĐỘ KHÁM PHÁ</span><h3>Các chủ đề bạn đã chạm tới</h3></div><span class="activity-total" id="activityTotal">0 lượt</span></div><div class="bar-chart" id="barChart"></div></div>
+          </div>
+        </section>
+      </main>
+    </div>
+    <div class="toast" id="toast" role="status"></div>
+    <div class="modal-backdrop hidden" id="helpModal"><div class="help-modal"><button class="modal-close" id="closeHelp" type="button">×</button><div class="modal-sparkle">✦</div><div class="eyebrow">CÁCH DÙNG ADMITBOT</div><h2>Cứ hỏi như đang<br /><em>trò chuyện.</em></h2><p>Bạn có thể hỏi về ngành học, tổ hợp xét tuyển, học phí, hồ sơ hoặc nói cho mình biết sở thích để nhận gợi ý. Đây là bản demo theo báo cáo nhóm 5.</p><div class="modal-tip"><span>01</span><strong>Hỏi điều bạn đang băn khoăn</strong></div><div class="modal-tip"><span>02</span><strong>Khám phá gợi ý và lưu ngành quan tâm</strong></div><div class="modal-tip"><span>03</span><strong>Luôn xác minh thông tin theo năm với Học viện</strong></div></div></div>
+    <script src="/app.js" defer></script>
+  </body>
+</html>
